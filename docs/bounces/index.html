@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -656,6 +656,17 @@
     <span class="md-ellipsis">
       
         Amazon Simple Email Service (SES)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-communication-services-acs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Communication Services (ACS)
       
     </span>
   </a>
@@ -1518,6 +1529,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#azure-communication-services-acs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Communication Services (ACS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exporting-bounces" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1643,6 +1665,11 @@
 <td style="text-align: left;">See below</td>
 </tr>
 <tr>
+<td style="text-align: left;"><code>https://listmonk.yoursite.com/webhooks/service/azure</code></td>
+<td style="text-align: left;">Azure Communication Services (ACS)</td>
+<td style="text-align: left;"><a href="https://learn.microsoft.com/en-us/azure/event-grid/communication-services-email-events">More info</a></td>
+</tr>
+<tr>
 <td style="text-align: left;"><code>https://listmonk.yoursite.com/webhooks/service/sendgrid</code></td>
 <td style="text-align: left;">Sendgrid / Twilio Signed event webhook</td>
 <td style="text-align: left;"><a href="https://docs.sendgrid.com/for-developers/tracking-events/getting-started-event-webhook-security-features">More info</a></td>
@@ -1719,6 +1746,29 @@
 </li>
 <li>You can optionally <a href="https://docs.aws.amazon.com/ses/latest/dg/monitor-sending-activity-using-notifications-email.html#monitor-sending-activity-using-notifications-email-disabling">disable email feedback forwarding</a>.</li>
 </ol>
+<h2 id="azure-communication-services-acs">Azure Communication Services (ACS)<a class="headerlink" href="#azure-communication-services-acs" title="Permanent link">&para;</a></h2>
+<p>If you use Azure Communication Services Email, listmonk can receive delivery report events from Azure Event Grid and turn them into bounces.</p>
+<ol>
+<li>In listmonk settings, go to "Bounces" and configure:<ul>
+<li>Enable bounce processing: <code>Enabled</code></li>
+<li>Enable bounce webhooks: <code>Enabled</code></li>
+<li>Enable Azure ACS: <code>Enabled</code></li>
+<li>Optional: set <code>Azure Event Grid Shared Secret</code>.</li>
+<li>Optional: set <code>Azure Shared Secret Header Name</code> if you want listmonk to read the secret from a header (defaults to <code>X-Listmonk-Webhook-Secret</code>).</li>
+</ul>
+</li>
+<li>In listmonk settings, go to "SMTP" and use the <code>Azure ACS</code> quick preset to fill SMTP defaults.</li>
+<li>In Azure, create an Event Grid subscription for your ACS Email events with:<ul>
+<li>Endpoint type: <code>Web Hook</code></li>
+<li>Endpoint URL: <code>https://listmonk.yoursite.com/webhooks/service/azure</code></li>
+<li>If using query-param auth, append <code>?code=&lt;your-shared-secret&gt;</code>.</li>
+<li>If using header auth, configure Event Grid to include the same secret in the header name configured in listmonk.</li>
+</ul>
+</li>
+<li>During subscription creation, Event Grid sends a subscription validation event. listmonk automatically returns <code>validationResponse</code> for this handshake.</li>
+<li>Subscribe to <code>Microsoft.Communication.EmailDeliveryReportReceived</code> events. listmonk maps relevant statuses to bounce records.</li>
+<li>Send test mail and verify bounces in listmonk.</li>
+</ol>
 <h2 id="exporting-bounces">Exporting bounces<a class="headerlink" href="#exporting-bounces" title="Permanent link">&para;</a></h2>
 <p>Bounces can be exported via the JSON API:
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;username:passsword&#39;</span><span class="w"> </span><span class="s1">&#39;http://localhost:9000/api/bounces&#39;</span>
@@ -1788,7 +1838,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.sections", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
